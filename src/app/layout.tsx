@@ -23,9 +23,32 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://satrivasarees.com"),
   title: "Satriva Sarees | Luxury Handcrafted Sarees & Indian Ethnic Wear",
   description:
     "Discover the beauty of Indian elegance with Satriva Sarees. Handcrafted silk sarees, wedding sarees, party wear, and designer sarees crafted for grace in every drape.",
+  keywords: [
+    "Satriva Sarees",
+    "Luxury Sarees",
+    "Pure Silk Sarees",
+    "Banarasi Sarees",
+    "Kanjivaram Silk",
+    "Wedding Sarees",
+    "Designer Sarees",
+    "Party Wear Sarees",
+    "Indian Handloom",
+  ],
+  icons: {
+    icon: "/logo/satriva-logo.jpg",
+    apple: "/logo/satriva-logo.jpg",
+  },
+  openGraph: {
+    title: "Satriva Sarees | Luxury Handcrafted Sarees & Indian Ethnic Wear",
+    description:
+      "Timeless traditions. Modern elegance. Explore our exquisite collection of sarees designed to celebrate your style, grace and individuality.",
+    images: ["/banners/satriva-official-banner.jpg"],
+    siteName: "Satriva Sarees",
+  },
 };
 
 export default function RootLayout({

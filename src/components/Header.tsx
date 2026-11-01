@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,6 +12,8 @@ import {
   X,
   Truck,
   User,
+  ChevronDown,
+  Sparkles,
 } from "lucide-react";
 import { InstagramIcon, FacebookIcon, YoutubeIcon } from "./SocialIcons";
 import LotusIcon from "./LotusIcon";
@@ -30,10 +32,20 @@ export default function Header() {
   const [trackOrderOpen, setTrackOrderOpen] = useState(false);
   const [trackingId, setTrackingId] = useState("");
   const [trackingStatus, setTrackingStatus] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Shop All", href: "/shop" },
+    { name: "Shop All", href: "/shop", hasMega: true },
     { name: "New Arrivals", href: "/shop?filter=new" },
     { name: "Best Sellers", href: "/shop?filter=bestseller" },
     { name: "About Us", href: "/about-us" },
@@ -68,7 +80,11 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full shadow-2xs bg-white">
+    <header
+      className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+        scrolled ? "shadow-md bg-white/98 backdrop-blur-md" : "shadow-2xs bg-white"
+      }`}
+    >
       {/* 1. Top Announcement Bar (Exact match to Reference Screenshot 1) */}
       <div className="bg-[#741525] text-white text-[11px] md:text-xs py-1.5 px-4 md:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -134,26 +150,153 @@ export default function Header() {
       {/* 2. Main Navigation Bar (Exact match to Reference Screenshot 1) */}
       <div className="bg-white border-b border-[#EDE0D0]/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
-          {/* Official Logo on Left (Lotus outline + SATRIVA SAREES in serif) */}
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <LotusIcon className="w-8 h-8 text-[#741525] group-hover:scale-105 transition-transform" />
+          {/* Official Logo on Left (Round Gold Emblem) */}
+          <Link href="/" className="flex items-center gap-3 group shrink-0 py-1">
+            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden p-0.5 bg-gradient-to-tr from-[#C69A4B] via-[#E5C378] to-[#9E1C2A] shadow-md group-hover:scale-105 transition-transform">
+              <div className="relative w-full h-full rounded-full overflow-hidden bg-[#FAF6F0]">
+                <Image
+                  src="/logo/satriva-logo.jpg"
+                  alt="Satriva Sarees Official Logo"
+                  fill
+                  sizes="56px"
+                  className="object-cover scale-[1.1]"
+                  priority
+                />
+              </div>
+            </div>
             <div className="flex flex-col">
-              <span className="font-serif text-2xl font-bold tracking-[0.18em] text-[#741525] uppercase leading-none">
+              <span className="font-serif text-xl sm:text-2xl font-bold tracking-[0.18em] text-[#741525] uppercase leading-none">
                 SATRIVA
               </span>
-              <span className="text-[10px] tracking-[0.32em] text-[#741525]/85 font-medium uppercase mt-0.5 font-serif text-center">
+              <span className="text-[10px] tracking-[0.32em] text-[#C69A4B] font-semibold uppercase mt-0.5 font-serif text-center">
                 SAREES
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center space-x-9">
+          <nav className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => {
               const isActive =
                 link.href === "/"
                   ? pathname === "/"
                   : pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href.split("?")[0]));
+
+              if (link.hasMega) {
+                return (
+                  <div
+                    key={link.name}
+                    className="relative"
+                    onMouseEnter={() => setMegaMenuOpen(true)}
+                    onMouseLeave={() => setMegaMenuOpen(false)}
+                  >
+                    <Link
+                      href={link.href}
+                      className={`flex items-center gap-1 font-serif text-sm tracking-normal transition-colors py-1 ${
+                        isActive
+                          ? "text-[#741525] font-semibold"
+                          : "text-[#351D19]/85 hover:text-[#741525]"
+                      }`}
+                    >
+                      <span>{link.name}</span>
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          megaMenuOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                      {isActive && (
+                        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#741525] rounded-full" />
+                      )}
+                    </Link>
+
+                    {/* Mega Menu Dropdown */}
+                    {megaMenuOpen && (
+                      <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-[720px] bg-white rounded-xl shadow-2xl border border-[#EDE0D0] p-6 z-50 animate-slide-up">
+                        <div className="grid grid-cols-3 gap-6 text-left">
+                          <div>
+                            <h4 className="text-xs font-semibold text-[#741525] uppercase tracking-wider mb-3">
+                              By Category
+                            </h4>
+                            <ul className="space-y-2 text-xs text-[#351D19]/80">
+                              {[
+                                "Silk Sarees",
+                                "Party Wear Sarees",
+                                "Traditional Sarees",
+                                "Designer Sarees",
+                                "Daily Wear Sarees",
+                                "Wedding Sarees",
+                              ].map((cat) => (
+                                <li key={cat}>
+                                  <Link
+                                    href={`/shop?category=${encodeURIComponent(cat)}`}
+                                    onClick={() => setMegaMenuOpen(false)}
+                                    className="hover:text-[#741525] transition-colors block py-0.5"
+                                  >
+                                    {cat}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h4 className="text-xs font-semibold text-[#741525] uppercase tracking-wider mb-3">
+                              Handcrafted Weaves
+                            </h4>
+                            <ul className="space-y-2 text-xs text-[#351D19]/80">
+                              {[
+                                "Pure Mulberry Silk",
+                                "Zari Brocade",
+                                "Crêpe Georgette",
+                                "Fine Handloom Cotton",
+                              ].map((fab) => (
+                                <li key={fab}>
+                                  <Link
+                                    href={`/shop?fabric=${encodeURIComponent(fab)}`}
+                                    onClick={() => setMegaMenuOpen(false)}
+                                    className="hover:text-[#741525] transition-colors block py-0.5"
+                                  >
+                                    {fab}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                            <div className="mt-4 pt-3 border-t border-[#EDE0D0]/60">
+                              <Link
+                                href="/shop?filter=bestseller"
+                                onClick={() => setMegaMenuOpen(false)}
+                                className="text-xs font-medium text-[#C69A4B] hover:text-[#741525] flex items-center gap-1"
+                              >
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span>Explore Bestsellers</span>
+                              </Link>
+                            </div>
+                          </div>
+                          <div className="bg-[#FAF5EE] rounded-lg p-3.5 border border-[#EDE0D0] flex flex-col justify-between">
+                            <div>
+                              <span className="text-[10px] uppercase font-bold tracking-widest text-[#C69A4B] block mb-1">
+                                Curated Edit
+                              </span>
+                              <h5 className="font-serif text-sm font-bold text-[#741525] mb-1">
+                                Royal Bridal Trousseau
+                              </h5>
+                              <p className="text-[11px] text-[#351D19]/70 leading-relaxed mb-3">
+                                Pure silk and hand-embellished zari drapes for life&apos;s grandest moments.
+                              </p>
+                            </div>
+                            <Link
+                              href="/shop?category=Wedding%20Sarees"
+                              onClick={() => setMegaMenuOpen(false)}
+                              className="w-full py-1.5 bg-[#741525] text-white text-[11px] font-semibold text-center rounded-sm hover:bg-[#4A1018] transition-colors"
+                            >
+                              Shop Bridal Edit
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
 
               return (
                 <Link
@@ -244,6 +387,34 @@ export default function Header() {
                 </button>
               </form>
 
+              {!searchQuery.trim() && (
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
+                  <span className="text-xs text-[#351D19]/60 font-medium">
+                    Trending Searches:
+                  </span>
+                  {[
+                    "Kanjivaram Silk",
+                    "Party Wear",
+                    "Wedding Saree",
+                    "Plum Sequin",
+                    "Banarasi Zari",
+                    "Daily Wear",
+                  ].map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => {
+                        router.push(`/shop?q=${encodeURIComponent(tag)}`);
+                        setSearchOpen(false);
+                      }}
+                      className="text-xs px-3 py-1 bg-white hover:bg-[#741525] text-[#351D19] hover:text-white rounded-full border border-[#EDE0D0] transition-colors shadow-2xs"
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {searchQuery.trim() && (
                 <div className="mt-3 bg-white rounded-lg border border-[#EDE0D0] p-2 shadow-md">
                   {filteredSearchResults.length > 0 ? (
@@ -292,10 +463,27 @@ export default function Header() {
           <div className="w-4/5 max-w-sm bg-[#FFF8EF] h-full shadow-2xl flex flex-col justify-between p-6">
             <div>
               <div className="flex items-center justify-between pb-4 border-b border-[#EDE0D0]">
-                <div className="flex items-center gap-2">
-                  <LotusIcon className="w-6 h-6 text-[#741525]" />
-                  <span className="font-serif font-bold text-lg text-[#741525]">SATRIVA</span>
-                </div>
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5">
+                  <div className="relative w-9 h-9 rounded-full overflow-hidden p-0.5 bg-gradient-to-tr from-[#C69A4B] via-[#E5C378] to-[#9E1C2A] shadow-xs shrink-0">
+                    <div className="relative w-full h-full rounded-full overflow-hidden bg-[#FAF6F0]">
+                      <Image
+                        src="/logo/satriva-logo.jpg"
+                        alt="Satriva Sarees Logo"
+                        fill
+                        sizes="36px"
+                        className="object-cover scale-[1.1]"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-serif font-bold text-base tracking-[0.18em] text-[#741525] uppercase leading-none">
+                      SATRIVA
+                    </span>
+                    <span className="text-[9px] tracking-[0.28em] text-[#C69A4B] font-semibold uppercase mt-0.5 font-serif">
+                      SAREES
+                    </span>
+                  </div>
+                </Link>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-[#351D19] p-1"
@@ -354,7 +542,17 @@ export default function Header() {
               <X className="w-5 h-5" />
             </button>
             <div className="text-center mb-6">
-              <LotusIcon className="w-12 h-12 text-[#741525] mx-auto mb-2" />
+              <div className="relative w-16 h-16 rounded-full overflow-hidden p-0.5 bg-gradient-to-tr from-[#C69A4B] via-[#E5C378] to-[#9E1C2A] shadow-md mx-auto mb-2">
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-[#FAF6F0]">
+                  <Image
+                    src="/logo/satriva-logo.jpg"
+                    alt="Satriva Sarees Logo"
+                    fill
+                    sizes="64px"
+                    className="object-cover scale-[1.1]"
+                  />
+                </div>
+              </div>
               <h3 className="text-xl font-serif font-bold text-[#741525]">Welcome to Satriva Sarees</h3>
               <p className="text-xs text-[#351D19]/70 mt-1">
                 Enter your mobile number or email to sign in or create your boutique account
@@ -375,7 +573,7 @@ export default function Header() {
                 <input
                   type="text"
                   required
-                  placeholder="+91 98765 43210 or yourname@example.com"
+                  placeholder="+91 91318 89706 or yourname@example.com"
                   className="w-full px-3.5 py-2.5 text-xs bg-white border border-[#EDE0D0] rounded-md focus:ring-1 focus:ring-[#741525]"
                 />
               </div>

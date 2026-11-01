@@ -46,13 +46,13 @@ export default function Hero() {
   useEffect(() => {
     if (!isPaused) {
       timeoutRef.current = setTimeout(() => {
-        nextSlide();
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
       }, 6000);
     }
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [currentSlide, isPaused]);
+  }, [currentSlide, isPaused, slides.length]);
 
   return (
     <section

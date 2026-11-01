@@ -11,7 +11,6 @@ import {
   CreditCard,
 } from "lucide-react";
 import { InstagramIcon, FacebookIcon, YoutubeIcon } from "./SocialIcons";
-import LotusIcon from "./LotusIcon";
 
 export default function Footer() {
   return (
@@ -19,7 +18,7 @@ export default function Footer() {
       {/* Subtle Top Gold Border Ornament */}
       <div className="h-1 bg-gradient-to-r from-[#4A1018] via-[#C69A4B] to-[#741525]" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         {/* Main Footer Links Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10">
           {/* Col 1: Brand & Logo */}
@@ -31,7 +30,8 @@ export default function Footer() {
                     src="/logo/satriva-logo.jpg"
                     alt="Satriva Sarees Official Logo"
                     fill
-                    className="object-cover"
+                    sizes="56px"
+                    className="object-cover scale-[1.1]"
                   />
                 </div>
               </div>
@@ -171,7 +171,9 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#C69A4B] shrink-0" />
-                <span>+91 98765 43210</span>
+                <a href="tel:+919131889706" className="hover:text-[#C69A4B] transition-colors">
+                  +91 91318 89706
+                </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#C69A4B] shrink-0" />

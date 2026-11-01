@@ -43,10 +43,10 @@ export default function CollectionSection() {
   ];
 
   return (
-    <section className="py-12 sm:py-16 bg-[#FAF6F0]">
+    <section className="py-16 sm:py-20 lg:py-20 bg-[#FAF6F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Lotus Divider & Headings */}
-        <div className="text-center mb-8 sm:mb-10">
+        <div className="text-center mb-10 sm:mb-12">
           <div className="flex items-center justify-center gap-3 text-[#B08D57] mb-2">
             <span className="h-[1px] w-12 sm:w-16 bg-[#B08D57]/60" />
             <LotusIcon className="w-5 h-5 text-[#741525]" />

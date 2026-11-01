@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useSyncExternalStore,
+} from "react";
 import { SareeProduct, CartItem } from "@/types";
 
 interface CartWishlistContextType {
@@ -23,49 +29,59 @@ interface CartWishlistContextType {
   clearToast: () => void;
 }
 
+const emptySubscribe = () => () => {};
+
 const CartWishlistContext = createContext<CartWishlistContextType | undefined>(undefined);
 
 export function CartWishlistProvider({ children }: { children: React.ReactNode }) {
-  const [isMounted, setIsMounted] = useState(false);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [wishlist, setWishlist] = useState<string[]>([]);
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const savedCart = localStorage.getItem("satriva_cart");
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [wishlist, setWishlist] = useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const savedWishlist = localStorage.getItem("satriva_wishlist");
+      return savedWishlist ? JSON.parse(savedWishlist) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "info" } | null>(null);
 
-  // Load from localStorage on client mount
+  // Save to localStorage when cart changes (only on client)
   useEffect(() => {
-    setIsMounted(true);
-    try {
-      const savedCart = localStorage.getItem("satriva_cart");
-      if (savedCart) {
-        setCart(JSON.parse(savedCart));
-      }
-      const savedWishlist = localStorage.getItem("satriva_wishlist");
-      if (savedWishlist) {
-        setWishlist(JSON.parse(savedWishlist));
-      }
-    } catch (e) {
-      console.error("Failed to load cart/wishlist from localStorage:", e);
-    }
-  }, []);
-
-  // Save to localStorage when cart changes
-  useEffect(() => {
+    if (!isMounted) return;
     try {
       localStorage.setItem("satriva_cart", JSON.stringify(cart));
     } catch (e) {
       console.error("Failed to save cart to localStorage:", e);
     }
-  }, [cart]);
+  }, [cart, isMounted]);
 
-  // Save to localStorage when wishlist changes
+  // Save to localStorage when wishlist changes (only on client)
   useEffect(() => {
+    if (!isMounted) return;
     try {
       localStorage.setItem("satriva_wishlist", JSON.stringify(wishlist));
     } catch (e) {
       console.error("Failed to save wishlist to localStorage:", e);
     }
-  }, [wishlist]);
+  }, [wishlist, isMounted]);
 
   const showToast = (message: string, type: "success" | "info" = "success") => {
     setToast({ message, type });

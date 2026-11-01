@@ -1,14 +1,36 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
+import {
+  X,
+  Trash2,
+  Plus,
+  Minus,
+  ShoppingBag,
+  ArrowRight,
+  Sparkles,
+  ShieldCheck,
+  Gift,
+} from "lucide-react";
 import { useCartWishlist } from "@/context/CartWishlistContext";
+import { PRODUCTS } from "@/data/products";
 
 export default function CartDrawer() {
-  const { cart, cartTotal, cartCount, updateQuantity, removeFromCart, isCartOpen, closeCart } =
-    useCartWishlist();
+  const {
+    cart,
+    cartTotal,
+    cartCount,
+    updateQuantity,
+    removeFromCart,
+    addToCart,
+    isCartOpen,
+    closeCart,
+  } = useCartWishlist();
+
+  const [orderNote, setOrderNote] = useState("");
+  const [showNoteInput, setShowNoteInput] = useState(false);
 
   if (!isCartOpen) return null;
 
@@ -16,6 +38,10 @@ export default function CartDrawer() {
   const isFreeShipping = cartTotal >= freeShippingThreshold;
   const amountToFreeShipping = Math.max(0, freeShippingThreshold - cartTotal);
   const progressPercent = Math.min(100, (cartTotal / freeShippingThreshold) * 100);
+
+  const recommendedItems = PRODUCTS.filter(
+    (p) => !cart.some((item) => item.product.id === p.id)
+  ).slice(0, 2);
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
@@ -148,6 +174,77 @@ export default function CartDrawer() {
                   </div>
                 </div>
               ))
+            )}
+
+            {/* In-Cart Recommendations: "Complete Your Royal Look" */}
+            {cart.length > 0 && recommendedItems.length > 0 && (
+              <div className="pt-4 border-t border-[#EDE0D0]/80">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#741525] uppercase tracking-wider mb-2.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#C69A4B]" />
+                  <span>Complete Your Royal Look</span>
+                </div>
+                <div className="space-y-2">
+                  {recommendedItems.map((rec) => (
+                    <div
+                      key={rec.id}
+                      className="flex items-center justify-between p-2.5 bg-white rounded-lg border border-[#EDE0D0] shadow-2xs"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="relative w-12 h-14 rounded-xs overflow-hidden bg-[#F8F1E8] shrink-0">
+                          <Image
+                            src={rec.images[0]}
+                            alt={rec.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div>
+                          <p className="text-xs font-serif font-medium text-[#351D19] line-clamp-1">
+                            {rec.name}
+                          </p>
+                          <p className="text-[11px] text-[#741525] font-semibold">
+                            ₹{rec.discountedPrice.toLocaleString("en-IN")}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => addToCart(rec, 1, rec.color)}
+                        className="px-2.5 py-1 bg-[#F8F1E8] hover:bg-[#741525] text-[#741525] hover:text-white border border-[#EDE0D0] hover:border-[#741525] text-[10px] font-semibold uppercase tracking-wider rounded-sm transition-colors shrink-0"
+                      >
+                        + Add
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Order Note / Gift Accordion */}
+            {cart.length > 0 && (
+              <div className="pt-3 border-t border-[#EDE0D0]/80 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setShowNoteInput(!showNoteInput)}
+                  className="flex items-center justify-between w-full text-stone-600 hover:text-[#741525] py-1"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Gift className="w-3.5 h-3.5 text-[#C69A4B]" />
+                    <span>Add Gift Message or Order Instructions</span>
+                  </span>
+                  <span className="text-xs">{showNoteInput ? "−" : "+"}</span>
+                </button>
+                {showNoteInput && (
+                  <div className="mt-2">
+                    <textarea
+                      rows={2}
+                      value={orderNote}
+                      onChange={(e) => setOrderNote(e.target.value)}
+                      placeholder="Write your personal gift message or special delivery instructions..."
+                      className="w-full text-xs p-2 rounded-md border border-[#EDE0D0] bg-white focus:outline-hidden focus:border-[#741525]"
+                    />
+                  </div>
+                )}
+              </div>
             )}
           </div>
 

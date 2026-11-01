@@ -7,15 +7,12 @@ import {
   Filter,
   SlidersHorizontal,
   X,
-  ChevronDown,
   ChevronRight,
   RotateCcw,
-  Sparkles,
 } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import LotusIcon, { LotusDivider } from "@/components/LotusIcon";
+import LotusIcon from "@/components/LotusIcon";
 import { PRODUCTS, COLLECTIONS } from "@/data/products";
-import { SareeCategory } from "@/types";
 import { useCartWishlist } from "@/context/CartWishlistContext";
 
 function ShopContent() {
@@ -34,6 +31,7 @@ function ShopContent() {
   const [selectedColor, setSelectedColor] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("featured");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [gridCols, setGridCols] = useState<2 | 3>(3);
 
   // Available Fabric options
   const fabrics = [
@@ -113,7 +111,6 @@ function ShopContent() {
       if (sortBy === "price-low") return a.discountedPrice - b.discountedPrice;
       if (sortBy === "price-high") return b.discountedPrice - a.discountedPrice;
       if (sortBy === "rating") return b.rating - a.rating;
-      if (sortBy === "discount") return b.discountPercentage - a.discountPercentage;
       return 0; // featured default
     });
   }, [
@@ -226,6 +223,28 @@ function ShopContent() {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Desktop Layout Grid Switcher */}
+            <div className="hidden sm:flex items-center border border-[#EDE0D0] rounded-md overflow-hidden bg-[#F8F1E8]">
+              <button
+                onClick={() => setGridCols(2)}
+                className={`px-2.5 py-1.5 text-xs font-semibold ${
+                  gridCols === 2 ? "bg-[#741525] text-white" : "text-[#351D19]/70 hover:text-[#741525]"
+                }`}
+                title="2 Columns View"
+              >
+                2 Col
+              </button>
+              <button
+                onClick={() => setGridCols(3)}
+                className={`px-2.5 py-1.5 text-xs font-semibold ${
+                  gridCols === 3 ? "bg-[#741525] text-white" : "text-[#351D19]/70 hover:text-[#741525]"
+                }`}
+                title="3 Columns View"
+              >
+                3 Col
+              </button>
+            </div>
+
             {hasActiveFilters && (
               <button
                 onClick={resetFilters}
@@ -247,11 +266,59 @@ function ShopContent() {
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
                 <option value="rating">Patron Rating</option>
-                <option value="discount">Highest Discount</option>
               </select>
             </div>
           </div>
         </div>
+
+        {/* Active Filter Chips Bar */}
+        {hasActiveFilters && (
+          <div className="flex items-center gap-2 flex-wrap mb-6 pt-2">
+            <span className="text-xs text-[#351D19]/60">Active:</span>
+            {selectedCategory !== "all" && (
+              <button
+                onClick={() => setSelectedCategory("all")}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#EDE0D0] hover:border-[#741525] rounded-full text-xs text-[#741525] shadow-2xs"
+              >
+                <span>Category: {selectedCategory}</span>
+                <X className="w-3 h-3" />
+              </button>
+            )}
+            {selectedFabric !== "all" && (
+              <button
+                onClick={() => setSelectedFabric("all")}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#EDE0D0] hover:border-[#741525] rounded-full text-xs text-[#741525] shadow-2xs"
+              >
+                <span>Fabric: {selectedFabric}</span>
+                <X className="w-3 h-3" />
+              </button>
+            )}
+            {selectedPriceRange !== "all" && (
+              <button
+                onClick={() => setSelectedPriceRange("all")}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#EDE0D0] hover:border-[#741525] rounded-full text-xs text-[#741525] shadow-2xs"
+              >
+                <span>Price: {selectedPriceRange}</span>
+                <X className="w-3 h-3" />
+              </button>
+            )}
+            {selectedColor !== "all" && (
+              <button
+                onClick={() => setSelectedColor("all")}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#EDE0D0] hover:border-[#741525] rounded-full text-xs text-[#741525] shadow-2xs"
+              >
+                <span>Color: {selectedColor}</span>
+                <X className="w-3 h-3" />
+              </button>
+            )}
+            <button
+              onClick={resetFilters}
+              className="text-xs text-[#741525] hover:underline font-medium ml-2"
+            >
+              Clear All
+            </button>
+          </div>
+        )}
 
         {/* Main Content: Sidebar + Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -412,7 +479,11 @@ function ShopContent() {
           {/* Product Grid Area */}
           <main className="lg:col-span-3">
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+              <div
+                className={`grid grid-cols-2 sm:grid-cols-2 ${
+                  gridCols === 2 ? "xl:grid-cols-2" : "xl:grid-cols-3"
+                } gap-4 sm:gap-6`}
+              >
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}

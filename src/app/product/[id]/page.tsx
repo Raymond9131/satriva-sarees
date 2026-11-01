@@ -14,7 +14,6 @@ import {
   ShieldCheck,
   MapPin,
   ChevronRight,
-  Sparkles,
   Share2,
   Check,
 } from "lucide-react";
@@ -59,7 +58,7 @@ function ProductDetailContent() {
   const handlePincodeCheck = (e: React.FormEvent) => {
     e.preventDefault();
     if (pincode.length === 6 && /^\d+$/.test(pincode)) {
-      setPincodeStatus(`✨ Express Delivery Available to ${pincode} by Tuesday! Cash on Delivery available.`);
+      setPincodeStatus(`✨ Express Delivery Available to ${pincode} by Tuesday! Insured Express Shipping.`);
     } else {
       setPincodeStatus("Please enter a valid 6-digit Indian Postal Pincode.");
     }
@@ -156,11 +155,6 @@ function ProductDetailContent() {
 
                 {/* Floating Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
-                  {product.discountPercentage > 0 && (
-                    <span className="px-2.5 py-1 bg-[#741525] text-white text-xs font-bold uppercase tracking-wider rounded-sm shadow-sm">
-                      {product.discountPercentage}% OFF
-                    </span>
-                  )}
                   {product.isBestSeller && (
                     <span className="px-2.5 py-1 bg-[#C69A4B] text-white text-xs font-bold uppercase tracking-wider rounded-sm shadow-sm">
                       Best Seller
@@ -248,11 +242,8 @@ function ProductDetailContent() {
                 <span className="font-serif text-3xl sm:text-4xl font-bold text-[#741525]">
                   ₹{product.discountedPrice.toLocaleString("en-IN")}
                 </span>
-                <span className="text-base text-stone-400 line-through">
-                  ₹{product.originalPrice.toLocaleString("en-IN")}
-                </span>
-                <span className="px-2.5 py-0.5 bg-[#741525] text-white text-xs font-bold rounded-sm">
-                  Save ₹{(product.originalPrice - product.discountedPrice).toLocaleString("en-IN")} ({product.discountPercentage}%)
+                <span className="px-2.5 py-0.5 bg-[#741525]/10 text-[#741525] text-xs font-semibold uppercase tracking-wider rounded-sm">
+                  Fixed Price
                 </span>
                 <p className="w-full text-[11px] text-stone-500 mt-1">
                   Inclusive of all taxes · Free insured express shipping across India
@@ -337,7 +328,7 @@ function ProductDetailContent() {
               <div className="mt-6 p-4 rounded-xl border border-[#EDE0D0] bg-[#F8F1E8]/60 space-y-2">
                 <div className="flex items-center gap-2 text-xs font-serif font-semibold text-[#351D19]">
                   <MapPin className="w-4 h-4 text-[#741525]" />
-                  <span>Check Delivery & Cash on Delivery Availability</span>
+                  <span>Check Express Delivery Availability</span>
                 </div>
                 <form onSubmit={handlePincodeCheck} className="flex gap-2">
                   <input
@@ -392,7 +383,7 @@ function ProductDetailContent() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as "desc" | "spec" | "care")}
                 className={`pb-3 text-xs sm:text-sm font-serif transition-colors relative ${
                   activeTab === tab.id
                     ? "font-bold text-[#741525]"
@@ -484,6 +475,36 @@ function ProductDetailContent() {
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
+        </div>
+
+        {/* Sticky Mobile Add to Cart Bar (Shopify Prestige Style) */}
+        <div className="fixed bottom-0 inset-x-0 bg-white border-t border-[#EDE0D0] p-3 shadow-2xl z-40 sm:hidden flex items-center justify-between gap-3 animate-slide-up">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="relative w-10 h-12 rounded-xs overflow-hidden shrink-0 bg-[#F8F1E8]">
+              <Image
+                src={product.images[0]}
+                alt={product.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="truncate">
+              <p className="text-xs font-semibold text-[#741525] truncate">
+                ₹{product.discountedPrice.toLocaleString("en-IN")}
+              </p>
+              <p className="text-[10px] text-stone-500 truncate">
+                {selectedColor}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => addToCart(product, quantity, selectedColor)}
+            className="flex-1 max-w-[180px] py-2.5 bg-[#741525] text-white text-xs font-bold uppercase tracking-wider rounded-md shadow-md flex items-center justify-center gap-1.5"
+          >
+            <ShoppingBag className="w-3.5 h-3.5" />
+            <span>Add to Bag</span>
+          </button>
         </div>
       </div>
     </div>

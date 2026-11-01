@@ -35,6 +35,79 @@ h1, h2, h3, h4, h5, h6, button, input, select, textarea, p, span, a {
   font-family: var(--font-poppins), "Poppins", system-ui, -apple-system, sans-serif;
 }
 
+.font-script, [class*="font-script"] {
+  font-family: var(--font-script), "Great Vibes", cursive !important;
+}
+
+/* Luxury Smooth Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Image Shimmer Skeleton */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #F8F1E8 25%, #EDE0D0 50%, #F8F1E8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+}
+
+/* Luxury Card Lift Effect */
+.card-luxury {
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.2, 0, 0.2, 1);
+}
+.card-luxury:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -8px rgba(116, 21, 37, 0.08), 0 4px 12px -2px rgba(198, 154, 75, 0.08);
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

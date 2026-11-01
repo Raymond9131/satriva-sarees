@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Star, ShoppingBag, ArrowRight, ShieldCheck, Truck } from "lucide-react";
+import { X, Star, ShoppingBag, ArrowRight, Truck } from "lucide-react";
 import { SareeProduct } from "@/types";
 import { useCartWishlist } from "@/context/CartWishlistContext";
 
@@ -101,16 +101,13 @@ export default function QuickViewModal({
                   <span className="text-stone-400">SKU: {product.sku}</span>
                 </div>
 
-                {/* Pricing */}
+                {/* Fixed Pricing */}
                 <div className="flex items-baseline gap-3 mt-3">
                   <span className="font-serif text-2xl font-bold text-[#741525]">
                     ₹{product.discountedPrice.toLocaleString("en-IN")}
                   </span>
-                  <span className="text-sm text-[#351D19]/40 line-through">
-                    ₹{product.originalPrice.toLocaleString("en-IN")}
-                  </span>
-                  <span className="px-2 py-0.5 bg-[#741525]/10 text-[#741525] text-xs font-bold rounded-sm">
-                    Save {product.discountPercentage}%
+                  <span className="text-xs text-stone-500 font-medium">
+                    (Fixed Price)
                   </span>
                 </div>
 

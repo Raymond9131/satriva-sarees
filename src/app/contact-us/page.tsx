@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import {
-  Mail,
   Phone,
   MapPin,
   Clock,
@@ -88,7 +87,7 @@ export default function ContactUsPage() {
             <div>
               <h3 className="font-serif font-bold text-sm text-[#741525]">Direct Concierge</h3>
               <p className="text-xs text-[#351D19]/80 mt-1">
-                Voice: +91 98765 43210
+                Voice: <a href="tel:+919131889706" className="hover:text-[#741525]">+91 91318 89706</a>
               </p>
               <p className="text-xs text-emerald-700 font-semibold mt-0.5 flex items-center gap-1">
                 <MessageCircle className="w-3.5 h-3.5" /> WhatsApp Stylist Available
@@ -163,7 +162,7 @@ export default function ContactUsPage() {
                     <input
                       type="tel"
                       required
-                      placeholder="+91 98765 43210"
+                      placeholder="+91 91318 89706"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full px-3.5 py-2.5 text-xs bg-[#FFF8EF] border border-[#EDE0D0] rounded-md focus:ring-1 focus:ring-[#741525]"
@@ -249,7 +248,7 @@ export default function ContactUsPage() {
             </div>
 
             <a
-              href="https://wa.me/919876543210?text=Hello%20Satriva%20Sarees,%20I%20would%20like%20to%20book%20a%20video%20call%20consultation."
+              href="https://wa.me/919131889706?text=Hello%20Satriva%20Sarees,%20I%20would%20like%20to%20book%20a%20video%20call%20consultation."
               target="_blank"
               rel="noreferrer"
               className="w-full py-3 bg-[#128C7E] hover:bg-[#075E54] text-white text-xs font-semibold uppercase tracking-wider rounded-md shadow-md transition-colors flex items-center justify-center gap-2"

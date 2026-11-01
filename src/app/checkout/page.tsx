@@ -4,15 +4,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ShieldCheck,
   CheckCircle2,
-  CreditCard,
-  Truck,
   ArrowRight,
-  Tag,
   Lock,
   ChevronRight,
-  Sparkles,
   ShoppingBag,
   Download,
 } from "lucide-react";
@@ -26,38 +21,20 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     name: "Pooja Varma",
     email: "pooja.varma@example.com",
-    phone: "9876543210",
+    phone: "9131889706",
     address: "Flat 402, Royal Palms Residency, 12th Main Road",
     city: "Bangalore",
     state: "Karnataka",
     pincode: "560038",
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<"upi" | "card" | "netbanking" | "cod">("upi");
-  const [couponCode, setCouponCode] = useState("");
-  const [discountPercent, setDiscountPercent] = useState(0);
-  const [couponMessage, setCouponMessage] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"upi" | "card" | "netbanking">("upi");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [confirmedOrderId, setConfirmedOrderId] = useState("");
 
   const shippingCost = cartTotal >= 999 || cartTotal === 0 ? 0 : 150;
-  const discountAmount = Math.round((cartTotal * discountPercent) / 100);
-  const grandTotal = Math.max(0, cartTotal + shippingCost - discountAmount);
-
-  const handleApplyCoupon = (e: React.FormEvent) => {
-    e.preventDefault();
-    const code = couponCode.trim().toUpperCase();
-    if (code === "SATRIVA10" || code === "WELCOME10") {
-      setDiscountPercent(10);
-      setCouponMessage("✨ 10% Royal Privilege Discount Applied!");
-    } else if (code === "ROYAL15") {
-      setDiscountPercent(15);
-      setCouponMessage("✨ 15% Festive Celebration Discount Applied!");
-    } else {
-      setCouponMessage("Invalid coupon code. Try SATRIVA10 or ROYAL15.");
-    }
-  };
+  const grandTotal = cartTotal + shippingCost;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -472,31 +449,6 @@ export default function CheckoutPage() {
                       </p>
                     </div>
                   </label>
-
-                  {/* COD */}
-                  <label
-                    className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
-                      paymentMethod === "cod"
-                        ? "border-[#741525] bg-[#FFF8EF] ring-1 ring-[#741525]"
-                        : "border-[#EDE0D0] hover:bg-[#F8F1E8]"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={paymentMethod === "cod"}
-                      onChange={() => setPaymentMethod("cod")}
-                      className="mt-1 text-[#741525]"
-                    />
-                    <div className="flex-1">
-                      <span className="font-semibold text-xs text-[#351D19] block">
-                        Cash on Delivery (COD)
-                      </span>
-                      <p className="text-[11px] text-stone-500 mt-0.5">
-                        Pay upon doorstep arrival in cash or via UPI to courier agent.
-                      </p>
-                    </div>
-                  </label>
                 </div>
               </div>
             </div>
@@ -535,31 +487,6 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
-                {/* Coupon Input */}
-                <div className="pt-3 border-t border-[#EDE0D0]">
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Coupon Code (e.g. SATRIVA10)"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      className="flex-1 px-3 py-2 text-xs bg-[#FFF8EF] border border-[#EDE0D0] rounded-md uppercase placeholder:normal-case focus:ring-1 focus:ring-[#741525]"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleApplyCoupon}
-                      className="px-4 py-2 bg-[#741525] text-white text-xs font-semibold rounded-md hover:bg-[#4A1018] transition-colors"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                  {couponMessage && (
-                    <p className={`text-xs mt-1.5 ${discountPercent > 0 ? "text-emerald-700 font-medium" : "text-red-600"}`}>
-                      {couponMessage}
-                    </p>
-                  )}
-                </div>
-
                 {/* Totals */}
                 <div className="space-y-2 pt-3 border-t border-[#EDE0D0] text-xs">
                   <div className="flex justify-between text-[#351D19]/80">
@@ -575,13 +502,6 @@ export default function CheckoutPage() {
                       {shippingCost === 0 ? "FREE" : `₹${shippingCost}`}
                     </span>
                   </div>
-
-                  {discountAmount > 0 && (
-                    <div className="flex justify-between text-emerald-700 font-medium">
-                      <span>Privilege Discount ({discountPercent}%)</span>
-                      <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
-                    </div>
-                  )}
 
                   <div className="flex justify-between text-base font-bold text-[#741525] pt-3 border-t border-[#EDE0D0] font-serif">
                     <span>Total Amount Payable</span>

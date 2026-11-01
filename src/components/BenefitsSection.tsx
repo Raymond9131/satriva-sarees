@@ -26,7 +26,7 @@ export default function BenefitsSection() {
   ];
 
   return (
-    <section className="w-full bg-[#F8F2EA] border-b border-[#E6DACB] py-5 sm:py-6">
+    <section className="w-full bg-[#F8F2EA] border-b border-[#E6DACB] py-7 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 md:divide-x md:divide-[#DFD0BE]">
           {benefits.map((item, index) => {
